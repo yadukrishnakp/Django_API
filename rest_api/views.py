@@ -1,5 +1,4 @@
 from django.shortcuts import render
-
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -30,3 +29,21 @@ def Show_Employee(request, pk):
     employees = Employee.objects.get(id=pk)
     serializer = Employee_Serializer(employees, many=False)
     return Response(serializer.data)
+
+
+# update details of a employee
+@api_view(['POST'])
+def Update_Employee(request, pk):
+    employee = Employee.objects.get(id=pk)
+    serializer = Employee_Serializer(instance=employee, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response("Updated successfully")
+
+
+# Delete employee
+@api_view(['DELETE'])
+def Delete_Employee(request, pk):
+    employee = Employee.objects.get(id=pk)
+    employee.delete()
+    return Response("deleted successfully")
